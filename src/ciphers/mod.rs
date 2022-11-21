@@ -1,5 +1,5 @@
-pub mod caesar;
-pub use caesar::Caesar;
+pub mod shift;
+pub use shift::Shift;
 pub mod scramble;
 pub use scramble::Scramble;
 

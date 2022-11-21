@@ -2,7 +2,7 @@ use crate::{
     common::*,
     ciphers::{
         Cipher,
-        Caesar,
+        Shift,
         Scramble,
     },
 };
@@ -17,7 +17,7 @@ use std::io::prelude::*;
 
 fn random_cipher_step() -> Box<dyn Cipher> {
     let ciphers = [
-        Caesar::gen,
+        Shift::gen,
         Scramble::gen,
     ];
     ciphers.choose(&mut thread_rng()).unwrap()()

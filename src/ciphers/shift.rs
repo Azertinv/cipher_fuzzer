@@ -5,14 +5,14 @@ use rand::{thread_rng, Rng};
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
-pub struct Caesar {
+pub struct Shift {
     pub key: u8,
 }
 
 #[typetag::serde]
-impl Cipher for Caesar {
+impl Cipher for Shift {
     fn generate() -> Self where Self: Sized {
-        Caesar { key: thread_rng().gen_range(0..CT_ALPHABET_SIZE) }
+        Shift { key: thread_rng().gen_range(0..CT_ALPHABET_SIZE) }
     }
 
     fn mutation_count(&self) -> u32 {
@@ -42,18 +42,18 @@ mod test {
 
     #[test]
     fn mutate() {
-        let mut caesar = Caesar { key: 42 };
-        caesar.mutate(Some(0));
-        assert_eq!(caesar.key, 43);
-        caesar.mutate(Some(1));
-        assert_eq!(caesar.key, 42);
+        let mut shift = Shift { key: 42 };
+        shift.mutate(Some(0));
+        assert_eq!(shift.key, 43);
+        shift.mutate(Some(1));
+        assert_eq!(shift.key, 42);
     }
 
     #[test]
     fn encrypt() {
-        let caesar = Caesar { key: 42 };
+        let shift = Shift { key: 42 };
         let mut data = vec![1, 2, 3, 80];
-        caesar.encrypt(&mut data);
+        shift.encrypt(&mut data);
         assert_eq!(data, vec![43, 44, 45, 39]);
     }
 }
