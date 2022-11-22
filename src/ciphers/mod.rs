@@ -6,6 +6,20 @@ pub use scramble::Scramble;
 pub mod cipher_stack;
 pub use cipher_stack::CipherStack;
 
+use rand::{
+    thread_rng,
+    seq::SliceRandom,
+};
+
+pub fn random_cipher_step() -> Box<dyn Cipher> {
+    let ciphers = [
+        Shift::gen,
+        Scramble::gen,
+    ];
+    ciphers.choose(&mut thread_rng()).unwrap()()
+}
+
+
 /// Trait describing a cipher step
 #[typetag::serde(tag = "type")]
 pub trait Cipher {

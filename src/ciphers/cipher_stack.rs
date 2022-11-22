@@ -1,27 +1,17 @@
 use crate::{
     common::*,
     ciphers::{
+        random_cipher_step,
         Cipher,
-        Shift,
-        Scramble,
     },
 };
 use rand::{
     thread_rng,
     Rng,
-    seq::SliceRandom,
 };
 use serde::{Serialize, Deserialize};
 use std::fs::File;
 use std::io::prelude::*;
-
-fn random_cipher_step() -> Box<dyn Cipher> {
-    let ciphers = [
-        Shift::gen,
-        Scramble::gen,
-    ];
-    ciphers.choose(&mut thread_rng()).unwrap()()
-}
 
 #[derive(Serialize, Deserialize)]
 pub struct CipherStack {
