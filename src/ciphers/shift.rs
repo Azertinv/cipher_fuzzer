@@ -1,4 +1,7 @@
-use crate::ciphers::Cipher;
+use crate::ciphers::{
+    InnerCipher,
+    Cipher,
+};
 use crate::common::*;
 
 use rand::{thread_rng, Rng};
@@ -25,14 +28,22 @@ impl Cipher for Shift {
             Some(1) => self.key -= 1,
             _ => *self = Self::generate(),
         }
-        self.key %= CT_ALPHABET_SIZE;
+        self.key = self.key.rem_euclid(CT_ALPHABET_SIZE);
     }
 
-    fn encrypt(&self, data: &mut [u8]) {
+    fn encrypt(&self, ct: &mut [u8]) {
         let alphabet: Vec<u8> = (0..CT_ALPHABET_SIZE).map(|letter| {
-            (letter + self.key) % CT_ALPHABET_SIZE
+            (letter + self.key).rem_euclid(CT_ALPHABET_SIZE)
         }).collect();
-        substitute(data, &alphabet);
+        substitute(ct, &alphabet);
+    }
+}
+
+#[typetag::serde]
+impl InnerCipher for Shift {
+    fn from_hint(hint: i32) -> Box<dyn Cipher> where Self: Sized {
+        let key = hint.rem_euclid(CT_ALPHABET_SIZE.into()) as u8;
+        Box::new(Shift { key }) as Box<dyn Cipher>
     }
 }
 

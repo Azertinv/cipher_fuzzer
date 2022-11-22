@@ -17,6 +17,9 @@ pub const READABLE_OFFSET: u8 = 32;
 
 pub const CT_PER_CTS: usize = 9;
 
+pub const MAX_CT_USIZE: usize = 138;
+pub const MIN_CT_USIZE: usize = 99;
+
 pub type Ct = Vec<u8>;
 pub type Cts = Vec<Ct>;
 

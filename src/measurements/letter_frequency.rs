@@ -28,16 +28,19 @@ mod test {
             vec![1, 2, 3],
             vec![4, 5, 6],
         ];
-        let Measure::LetterFrequency{ freq, summary } = measure(&data);
-        println!("{:?}", freq);
-        println!("{:?}", summary);
-        assert_eq!(freq[1], 2.0 / 9.0);
-        assert_eq!(freq[2], 2.0 / 9.0);
-        assert_eq!(freq[3], 2.0 / 9.0);
-        assert_eq!(freq[4], 1.0 / 9.0);
-        assert_eq!(freq[5], 1.0 / 9.0);
-        assert_eq!(freq[6], 1.0 / 9.0);
-        assert_eq!(summary.minimum, 0.0);
-        assert_eq!(summary.maximum, 2.0/9.0);
+        if let Measure::LetterFrequency{ freq, summary } = measure(&data) {
+            println!("{:?}", freq);
+            println!("{:?}", summary);
+            assert_eq!(freq[1], 2.0 / 9.0);
+            assert_eq!(freq[2], 2.0 / 9.0);
+            assert_eq!(freq[3], 2.0 / 9.0);
+            assert_eq!(freq[4], 1.0 / 9.0);
+            assert_eq!(freq[5], 1.0 / 9.0);
+            assert_eq!(freq[6], 1.0 / 9.0);
+            assert_eq!(summary.minimum, 0.0);
+            assert_eq!(summary.maximum, 2.0/9.0);
+        } else {
+            panic!();
+        }
     }
 }

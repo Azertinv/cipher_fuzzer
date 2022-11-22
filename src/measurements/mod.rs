@@ -2,10 +2,12 @@ use statistical as stat;
 use crate::common::*;
 
 pub mod letter_frequency;
+pub mod letter_repeats;
 
 pub fn measure(cts: &Cts) -> Vec<f64>{
     measures_to_values(&[
         letter_frequency::measure(cts),
+        letter_repeats::measure(cts),
     ])
 }
 
@@ -19,6 +21,9 @@ pub enum Measure {
         freq: [f64; CT_ALPHABET_USIZE],
         summary: Summary<f64>
     },
+    LetterRepeats {
+        count: usize,
+    },
 }
 
 impl Measure {
@@ -26,6 +31,9 @@ impl Measure {
         match self {
             Measure::LetterFrequency{ freq: _ , summary } => {
                 vec![summary.median, summary.minimum, summary.maximum, summary.stdev]
+            },
+            Measure::LetterRepeats{ count } => {
+                vec![*count as f64]
             },
         }
     }

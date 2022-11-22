@@ -1,10 +1,18 @@
+pub mod cipher_stack;
+pub use cipher_stack::CipherStack;
+pub mod inner_cipher;
+pub use inner_cipher::{
+    InnerCipherFactory,
+    InnerCipher,
+};
+
 pub mod shift;
 pub use shift::Shift;
 pub mod scramble;
 pub use scramble::Scramble;
 
-pub mod cipher_stack;
-pub use cipher_stack::CipherStack;
+pub mod indexer;
+pub use indexer::Indexer;
 
 use rand::{
     thread_rng,
@@ -15,6 +23,7 @@ pub fn random_cipher_step() -> Box<dyn Cipher> {
     let ciphers = [
         Shift::gen,
         Scramble::gen,
+        Indexer::gen,
     ];
     ciphers.choose(&mut thread_rng()).unwrap()()
 }

@@ -27,7 +27,7 @@ pub fn get_texts() -> io::Result<Cts> {
 
 fn random_ciphertext() -> Ct {
     let mut rng = rand::thread_rng();
-    let size = rng.gen_range(99..=137);
+    let size = rng.gen_range(MIN_CT_USIZE..=MAX_CT_USIZE);
     (0..size).map(|_| *CT_ALPHABET.choose(&mut rng).unwrap()).collect()
 }
 

@@ -1,4 +1,4 @@
-use crate::ciphers::Cipher;
+use crate::ciphers::{InnerCipher, Cipher};
 use crate::common::*;
 
 use rand::{
@@ -29,10 +29,18 @@ impl Cipher for Scramble {
         *self = Self::generate();
     }
 
-    fn encrypt(&self, data: &mut [u8]) {
+    fn encrypt(&self, ct: &mut [u8]) {
         let mut alphabet: Vec<u8> = CT_ALPHABET.to_vec();
         alphabet.shuffle(&mut StdRng::seed_from_u64(self.seed));
-        substitute(data, &alphabet);
+        substitute(ct, &alphabet);
+    }
+}
+
+#[typetag::serde]
+impl InnerCipher for Scramble {
+    fn from_hint(hint: i32) -> Box<dyn Cipher> where Self: Sized {
+        let seed = (hint as u64) * 1337;
+        Box::new(Scramble { seed }) as Box<dyn Cipher>
     }
 }
 
