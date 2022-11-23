@@ -3,11 +3,13 @@ use crate::common::*;
 
 pub mod letter_frequency;
 pub mod letter_repeats;
+pub mod index_bounds;
 
 pub fn measure(cts: &Cts) -> Vec<f64>{
     measures_to_values(&[
         letter_frequency::measure(cts),
         letter_repeats::measure(cts),
+        index_bounds::measure(cts),
     ])
 }
 
@@ -19,10 +21,13 @@ fn measures_to_values(measures: &[Measure]) -> Vec<f64> {
 pub enum Measure {
     LetterFrequency {
         freq: [f64; CT_ALPHABET_USIZE],
-        summary: Summary<f64>
+        summary: Summary<f64>,
     },
     LetterRepeats {
         count: usize,
+    },
+    IndexBounds {
+        summary: Summary<u8>,
     },
 }
 
@@ -30,10 +35,24 @@ impl Measure {
     pub fn extract(&self) -> Vec<f64> {
         match self {
             Measure::LetterFrequency{ freq: _ , summary } => {
-                vec![summary.median, summary.minimum, summary.maximum, summary.stdev]
+                vec![
+                    summary.median,
+                    summary.minimum,
+                    summary.maximum,
+                    summary.stdev
+                ]
             },
             Measure::LetterRepeats{ count } => {
                 vec![*count as f64]
+            },
+            Measure::IndexBounds{ summary } => {
+                vec![
+                    summary.mean,
+                    summary.median,
+                    summary.minimum.into(),
+                    summary.maximum.into(),
+                    summary.stdev
+                ]
             },
         }
     }

@@ -30,6 +30,21 @@ pub fn print_texts(cts: &Cts) {
     }
 }
 
+pub fn get_columns(cts: &Cts) -> Vec<Vec<u8>> {
+    let mut result = vec![];
+    let max_ct_len = cts.iter().map(Vec::len).max().unwrap();
+    for i in 0..max_ct_len {
+        let mut index = vec![];
+        for ct in cts.iter() {
+            if i < ct.len() {
+                index.push(ct[i]);
+            }
+        }
+        result.push(index);
+    }
+    result
+}
+
 /// Helper function for `Cipher`s
 pub fn substitute(data: &mut [u8], alphabet: &[u8]) {
     assert!(alphabet.len() == CT_ALPHABET_SIZE as usize);

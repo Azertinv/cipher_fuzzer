@@ -39,7 +39,7 @@ impl Cipher for Scramble {
 #[typetag::serde]
 impl InnerCipher for Scramble {
     fn from_hint(hint: i32) -> Box<dyn Cipher> where Self: Sized {
-        let seed = (hint as u64) * 1337;
+        let seed = (hint as u64).wrapping_mul(1337);
         Box::new(Scramble { seed }) as Box<dyn Cipher>
     }
 }
