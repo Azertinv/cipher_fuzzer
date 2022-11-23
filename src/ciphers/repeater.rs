@@ -51,13 +51,11 @@ impl Cipher for Repeater {
 
     fn encrypt(&self, data: &mut [u8]) {
         let key_len = self.key.len();
-        let ciphers: Vec<Box<dyn Cipher>> = (0..data.len())
-            .map(|i| {
-                let hint = self.key[i % key_len].into();
-                self.cipher_factory.build_from_hint(hint)
-            }).collect();
+        let ciphers: Vec<Box<dyn Cipher>> = self.key.iter()
+            .map(|k| self.cipher_factory.build_from_hint((*k).into()))
+            .collect();
         for i in 0..data.len() {
-            ciphers[i].encrypt(&mut data[i..i+1]);
+            ciphers[i % key_len].encrypt(&mut data[i..i+1]);
         }
     }
 }
@@ -68,7 +66,7 @@ mod test {
 
     #[test]
     fn mutate() {
-        let repeater = Repeater {
+        let mut repeater = Repeater {
             key: "ABCDE".as_bytes().to_vec(),
             cipher_factory: InnerCipherFactory::ShiftFactory,
         };
@@ -83,7 +81,7 @@ mod test {
     #[test]
     fn encrypt() {
         let mut data = "1337 BOI".as_bytes().to_vec();
-        let mut repeater = Repeater {
+        let repeater = Repeater {
             key: "AAABBB".as_bytes().to_vec(),
             cipher_factory: InnerCipherFactory::ShiftFactory,
         };
