@@ -45,15 +45,15 @@ The best way to contribute is by creating cipher steps and measurements. You can
 If you can't code in rust yourself you can create an issue for a cipher step or a measure you feel is missing. You can also help decompositing ciphers and show your work by creating an issue, I'll implement your ideas.
 
 ### Adding a cipher checklist
+- [ ] create a struct implementing Cipher
 - [ ] scheduled mutation count is consistent with the mutate method
 - [ ] gen func is added to ciphers::cipher_stack::random_cipher_step list
-- [ ] if it can be autokeyed, add it to the autokeyer
+- [ ] if it can be an inner cipher impl InnerCipher for it, see Shift or Scramble
 - [ ] tests for mutate and encrypt
 
 ### Adding a measure checklist
-- [ ] it's added to measurements::measure
-- [ ] measure is consitent with whatever input data size we give it
-- [ ] extraction is implemented in Measure::extract
+- [ ] create a struct implementing Measure
+- [ ] measure is consistent whatever input data size we give it
 - [ ] tests for measure and extraction
 
 ## Plans
