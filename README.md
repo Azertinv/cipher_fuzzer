@@ -33,6 +33,7 @@ The autokeyer can also be replaced with a key generator based on the index.
 - Shift
 - Scramble
 - Indexer
+- Repeater
 
 ## Measurements
 - Letter distribution
