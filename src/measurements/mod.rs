@@ -2,60 +2,30 @@ use statistical as stat;
 use crate::common::*;
 
 pub mod letter_frequency;
+pub use letter_frequency::LetterFrequency;
 pub mod letter_repeats;
+pub use letter_repeats::LetterRepeats;
 pub mod index_bounds;
+pub use index_bounds::IndexBounds;
 
 pub fn measure(cts: &Cts) -> Vec<f64>{
-    measures_to_values(&[
-        letter_frequency::measure(cts),
-        letter_repeats::measure(cts),
-        index_bounds::measure(cts),
-    ])
+    let measurements = [
+        LetterRepeats::measure,
+        LetterFrequency::measure,
+        IndexBounds::measure,
+    ];
+    measurements.iter()
+        .map(|measure_fn| measure_fn(cts))
+        .flat_map(|measure| measure.extract())
+        .collect()
 }
 
-fn measures_to_values(measures: &[Measure]) -> Vec<f64> {
-    measures.iter().flat_map(|m| m.extract()).collect()
-}
+pub trait Measure : std::fmt::Debug {
+    fn measure(cts: &Cts) -> Box<dyn Measure> where Self: Sized;
 
-#[derive(Debug)]
-pub enum Measure {
-    LetterFrequency {
-        freq: [f64; CT_ALPHABET_USIZE],
-        summary: Summary<f64>,
-    },
-    LetterRepeats {
-        count: usize,
-    },
-    IndexBounds {
-        summary: Summary<u8>,
-    },
-}
+    fn extract(&self) -> Vec<f64>;
 
-impl Measure {
-    pub fn extract(&self) -> Vec<f64> {
-        match self {
-            Measure::LetterFrequency{ freq: _ , summary } => {
-                vec![
-                    summary.median,
-                    summary.minimum,
-                    summary.maximum,
-                    summary.stdev
-                ]
-            },
-            Measure::LetterRepeats{ count } => {
-                vec![*count as f64]
-            },
-            Measure::IndexBounds{ summary } => {
-                vec![
-                    summary.mean,
-                    summary.median,
-                    summary.minimum.into(),
-                    summary.maximum.into(),
-                    summary.stdev
-                ]
-            },
-        }
-    }
+    fn as_any(&self) -> &dyn std::any::Any;
 }
 
 #[derive(Debug)]
