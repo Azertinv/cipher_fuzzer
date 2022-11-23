@@ -37,6 +37,7 @@ The autokeyer can also be replaced with a key generator based on the index.
 ## Measurements
 - Letter distribution
 - Letter repeats
+- Index bounds
 
 ## Contribute
 The best way to contribute is by creating cipher steps and measurements. You can look at the issue list to find stuff to do.
