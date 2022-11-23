@@ -9,12 +9,12 @@ pub mod index_bounds;
 pub use index_bounds::IndexBounds;
 
 pub fn measure(cts: &Cts) -> Vec<f64>{
-    let measurements = [
+    let measure_fns = [
         LetterRepeats::measure,
         LetterFrequency::measure,
         IndexBounds::measure,
     ];
-    measurements.iter()
+    measure_fns.iter()
         .map(|measure_fn| measure_fn(cts))
         .flat_map(|measure| measure.extract())
         .collect()

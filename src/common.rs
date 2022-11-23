@@ -49,6 +49,7 @@ pub fn get_columns(cts: &Cts) -> Vec<Vec<u8>> {
 pub fn substitute(data: &mut [u8], alphabet: &[u8]) {
     assert!(alphabet.len() == CT_ALPHABET_SIZE as usize);
     for elem in data.iter_mut() {
-        *elem = alphabet[*elem as usize];
+        *elem = *alphabet.get(*elem as usize)
+            .expect("substitute() letter in data is out of bound");
     }
 }

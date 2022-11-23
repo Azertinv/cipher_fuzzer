@@ -13,6 +13,8 @@ pub use scramble::Scramble;
 
 pub mod indexer;
 pub use indexer::Indexer;
+pub mod repeater;
+pub use repeater::Repeater;
 
 use rand::{
     thread_rng,
@@ -24,6 +26,7 @@ pub fn random_cipher_step() -> Box<dyn Cipher> {
         Shift::gen,
         Scramble::gen,
         Indexer::gen,
+        Repeater::gen,
     ];
     ciphers.choose(&mut thread_rng()).unwrap()()
 }

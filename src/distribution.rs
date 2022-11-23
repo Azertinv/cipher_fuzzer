@@ -58,7 +58,7 @@ impl Distributions {
 
     fn generate(gen_fn: fn() -> Cts) -> Self {
         let mut results = vec![];
-        for _ in 0..100000 {
+        for _ in 0..10000 {
             results.push(measure(&gen_fn()));
         }
         let mut means = vec![];
