@@ -34,6 +34,7 @@ The autokeyer can also be replaced with a key generator based on the index.
 - Scramble
 - Indexer
 - Repeater
+- Ciphertext Autokeyer
 
 ## Measurements
 - Letter distribution
