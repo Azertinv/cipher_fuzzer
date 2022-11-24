@@ -17,19 +17,10 @@ pub struct PValues {
 }
 
 impl PValues {
-    fn diff(lhs: &PValues, rhs: &PValues) -> Vec<f64> {
-        let mut diff = Vec::with_capacity(lhs.values.len());
-        for (a, b) in zip(&lhs.values, &rhs.values) {
-            diff.push(a - b);
-        }
-        diff
-    }
-
     pub fn distance(&self, rhs: &PValues) -> f64 {
-        let diff = Self::diff(self, rhs);
         let mut distance = 0.0;
-        for value in diff.iter() {
-            distance += value.abs().powi(2);
+        for (lhs, rhs) in zip(&self.values, &rhs.values) {
+            distance += (lhs - rhs).abs().powi(2);
         }
         distance
     }

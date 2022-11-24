@@ -35,6 +35,7 @@ The autokeyer can also be replaced with a key generator based on the index.
 - Indexer
 - Repeater
 - Ciphertext Autokeyer
+- Progressor
 
 ## Measurements
 - Letter distribution

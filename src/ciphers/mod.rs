@@ -17,6 +17,8 @@ pub mod repeater;
 pub use repeater::Repeater;
 pub mod ct_autokeyer;
 pub use ct_autokeyer::CtAutoKeyer;
+pub mod progressor;
+pub use progressor::Progressor;
 
 use rand::{
     thread_rng,
@@ -30,6 +32,7 @@ pub fn random_cipher_step() -> Box<dyn Cipher> {
         Indexer::gen,
         Repeater::gen,
         CtAutoKeyer::gen,
+        Progressor::gen,
     ];
     ciphers.choose(&mut thread_rng()).unwrap()()
 }
