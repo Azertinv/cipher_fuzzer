@@ -1,5 +1,9 @@
 use crate::common::*;
-use crate::measurements::{Measure, Summary};
+use crate::measurements::{
+    Measure,
+    Summary,
+    get_letter_count_and_sum,
+};
 
 #[derive(Debug)]
 pub struct LetterFrequency {
@@ -9,14 +13,7 @@ pub struct LetterFrequency {
 
 impl Measure for LetterFrequency {
     fn measure(cts: &Cts) -> Box<dyn Measure>  {
-        let mut count = [0; CT_ALPHABET_USIZE];
-        let mut sum = 0;
-        for ct in cts.iter() {
-            sum += ct.len();
-            for l in ct.iter() {
-                count[*l as usize] += 1;
-            }
-        }
+        let (count, sum) = get_letter_count_and_sum(cts);
         let freq: [f64; CT_ALPHABET_USIZE] = count.iter().map(|x| {
             *x as f64 / sum as f64
         }).collect::<Vec<f64>>().try_into().unwrap();
