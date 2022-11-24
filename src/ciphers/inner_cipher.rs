@@ -12,7 +12,7 @@ use crate::{
     },
 };
 
-#[derive(Serialize, Deserialize, Copy, Clone, Debug)]
+#[derive(Serialize, Deserialize, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum InnerCipherFactory {
     ShiftFactory,
     ScrambleFactory,
