@@ -7,7 +7,7 @@ use crate::common::*;
 use rand::{thread_rng, Rng};
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Shift {
     pub key: u8,
 }

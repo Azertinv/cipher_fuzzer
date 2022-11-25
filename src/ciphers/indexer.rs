@@ -6,7 +6,7 @@ use crate::ciphers::{
 use rand::{thread_rng, Rng};
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Indexer {
     offset: i32,
     increment: i32,

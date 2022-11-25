@@ -8,6 +8,9 @@ pub struct IndexBounds {
 
 impl Measure for IndexBounds {
     fn measure(cts: &Cts) -> Box<dyn Measure> {
+        if cts.len() < 2 {
+            return Box::new(IndexBounds { summary: Summary::generate(&[]) })
+        }
         let mut columns = get_columns(cts);
         let mut holes_in_columns: Vec<Vec<u8>> = vec![];
         for column in columns.iter_mut() {

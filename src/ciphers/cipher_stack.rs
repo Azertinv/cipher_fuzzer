@@ -13,7 +13,7 @@ use serde::{Serialize, Deserialize};
 use std::fs::File;
 use std::io::prelude::*;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CipherStack {
     ciphers: Vec<Box<dyn Cipher>>,
 }

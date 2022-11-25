@@ -37,10 +37,11 @@ pub fn random_cipher_step() -> Box<dyn Cipher> {
     ciphers.choose(&mut thread_rng()).unwrap()()
 }
 
+use dyn_clone::{clone_trait_object, DynClone};
 
 /// Trait describing a cipher step
 #[typetag::serde(tag = "type")]
-pub trait Cipher {
+pub trait Cipher : std::fmt::Debug + DynClone {
     /// Generate the cipher step as a trait object
     fn gen() -> Box<dyn Cipher>
     where
@@ -62,3 +63,5 @@ pub trait Cipher {
     /// Encrypts data in place
     fn encrypt(&self, data: &mut [u8]);
 }
+
+clone_trait_object!(Cipher);

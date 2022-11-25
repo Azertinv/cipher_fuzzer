@@ -5,7 +5,7 @@ use crate::measurements::{
     get_ioc,
 };
 
-const MAX_PERIOD: usize = 50;
+const MAX_PERIOD: usize = 100;
 
 #[derive(Debug)]
 pub struct PeriodicIoC {
@@ -14,7 +14,7 @@ pub struct PeriodicIoC {
 
 impl Measure for PeriodicIoC {
     fn measure(cts: &Cts) -> Box<dyn Measure>  {
-        let values: Vec<f64> = (2..MAX_PERIOD)
+        let values: Vec<f64> = (1..MAX_PERIOD)
             .map(|period| get_ioc(get_periodic_letter_count(cts, period))).collect();
         Box::new(PeriodicIoC { values })
     }
@@ -52,8 +52,8 @@ mod test {
         println!("{result:?}");
         let peak = *result.values.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
         assert_eq!(83.0, peak);
-        assert_eq!(result.values[5], peak);
-        assert_eq!(result.values[6], 0.0);
-        assert_eq!(result.values[5+7], peak);
+        assert_eq!(result.values[6], peak);
+        assert_eq!(result.values[7], 0.0);
+        assert_eq!(result.values[6+7], peak);
     }
 }

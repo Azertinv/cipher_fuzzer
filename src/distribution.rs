@@ -13,7 +13,7 @@ use serde::{Serialize, Deserialize};
 use serde_json;
 
 pub struct PValues {
-    values: Vec<f64>,
+    pub values: Vec<f64>,
 }
 
 impl PValues {

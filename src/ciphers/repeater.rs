@@ -11,7 +11,7 @@ use rand::{
 };
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Repeater {
     key: Vec<u8>,
     cipher_factory: InnerCipherFactory,

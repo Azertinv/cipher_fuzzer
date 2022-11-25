@@ -11,7 +11,7 @@ use rand::{
 };
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CtAutoKeyer {
     iv: u8,
     cipher_factory: InnerCipherFactory,

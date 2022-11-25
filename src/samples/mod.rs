@@ -34,3 +34,28 @@ fn random_ciphertext() -> Ct {
 pub fn random_ciphertexts() -> Cts {
     (0..CT_PER_CTS).map(|_| random_ciphertext()).collect()
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn sample_plaintext_in_bound() {
+        let pts = plaintexts_vec();
+        for pt in pts.iter() {
+            for l in pt {
+                assert!(CT_ALPHABET.contains(l));
+            }
+        }
+    }
+
+    #[test]
+    fn sample_messages_in_bound() {
+        let cts = messages_vec();
+        for ct in cts.iter() {
+            for l in ct {
+                assert!(CT_ALPHABET.contains(l));
+            }
+        }
+    }
+}

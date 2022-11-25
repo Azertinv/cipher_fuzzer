@@ -3,12 +3,8 @@ use crate::common::*;
 
 pub mod letter_frequency;
 pub use letter_frequency::LetterFrequency;
-pub mod letter_repeats;
-pub use letter_repeats::LetterRepeats;
 pub mod index_bounds;
 pub use index_bounds::IndexBounds;
-pub mod index_of_coincidence;
-pub use index_of_coincidence::IoC;
 pub mod isomorphs_counts;
 pub use isomorphs_counts::IsomorphsCounts;
 pub mod periodic_ioc;
@@ -16,10 +12,8 @@ pub use periodic_ioc::PeriodicIoC;
 
 pub fn measure(cts: &Cts) -> Vec<f64>{
     let measure_fns = [
-        LetterRepeats::measure,
         LetterFrequency::measure,
         IndexBounds::measure,
-        IoC::measure,
         IsomorphsCounts::measure,
         PeriodicIoC::measure,
     ];
