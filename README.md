@@ -42,6 +42,7 @@ The autokeyer can also be replaced with a key generator based on the index.
 - Letter repeats
 - Index bounds
 - Index of coincidence
+- Isomorphs counts
 
 ## Contribute
 The best way to contribute is by creating cipher steps and measurements. You can look at the issue list to find stuff to do.
@@ -56,7 +57,7 @@ If you can't code in rust yourself you can create an issue for a cipher step or 
 
 ### Adding a measure checklist
 - [ ] create a struct implementing Measure
-- [ ] measure is consistent whatever input data size we give it
+- [ ] add the measure function to the measure_fns
 - [ ] tests for measure and extraction
 
 ## Plans

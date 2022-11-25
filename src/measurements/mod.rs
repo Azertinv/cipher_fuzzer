@@ -9,6 +9,8 @@ pub mod index_bounds;
 pub use index_bounds::IndexBounds;
 pub mod index_of_coincidence;
 pub use index_of_coincidence::IoC;
+pub mod isomorphs_counts;
+pub use isomorphs_counts::IsomorphsCounts;
 
 pub fn measure(cts: &Cts) -> Vec<f64>{
     let measure_fns = [
@@ -16,11 +18,25 @@ pub fn measure(cts: &Cts) -> Vec<f64>{
         LetterFrequency::measure,
         IndexBounds::measure,
         IoC::measure,
+        IsomorphsCounts::measure,
     ];
     measure_fns.iter()
         .map(|measure_fn| measure_fn(cts))
         .flat_map(|measure| measure.extract())
         .collect()
+}
+
+pub fn get_isomorphs(ct: &[u8], max_size: usize) -> Vec<Vec<usize>> {
+    let mut isomorphs = vec![Vec::new(); max_size];
+    let ct_len = ct.len();
+    for i in 1..=max_size {
+        for j in i..ct_len {
+            if ct[j - i] == ct[j] {
+                isomorphs[i - 1].push(j - i);
+            }
+        }
+    }
+    isomorphs
 }
 
 pub fn get_letter_count_and_sum(cts: &Cts) -> (Vec<i64>, usize) {
@@ -65,5 +81,18 @@ impl<T> Summary<T> {
         let maximum = *data.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
         let stdev = stat::standard_deviation(&float_data, None);
         Summary { mean, median, minimum, maximum, stdev }
+    }
+
+    fn to_vec(&self) -> Vec<f64>
+    where
+        T: Into<f64> + Copy,
+    {
+        vec![
+            self.mean,
+            self.median,
+            self.minimum.into(),
+            self.maximum.into(),
+            self.stdev,
+        ]
     }
 }

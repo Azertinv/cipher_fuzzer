@@ -22,7 +22,7 @@ impl Measure for IoC {
     }
 
     fn extract(&self) -> Vec<f64> {
-       vec![ self.value ]
+       vec![self.value]
     }
 
     fn as_any(&self) -> &dyn std::any::Any {

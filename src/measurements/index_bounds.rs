@@ -31,13 +31,7 @@ impl Measure for IndexBounds {
     }
 
     fn extract(&self) -> Vec<f64> {
-        vec![
-            self.summary.mean,
-            self.summary.median,
-            self.summary.minimum.into(),
-            self.summary.maximum.into(),
-            self.summary.stdev,
-        ]
+        self.summary.to_vec()
     }
 
     fn as_any(&self) -> &dyn std::any::Any {

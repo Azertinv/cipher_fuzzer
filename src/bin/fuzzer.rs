@@ -32,7 +32,7 @@ fn main() -> std::io::Result<()> {
     }
 
     let pts = plaintexts_vec();
-    for _ in 0..1000 {
+    for _ in 0..10000 {
         let cipher_stack = CipherStack::random(args.steps);
         let cts = cipher_stack.encrypt(pts.clone());
         let cts_p = random_dist.p_values(&measure(&cts));

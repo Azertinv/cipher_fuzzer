@@ -9,5 +9,7 @@ fn main() -> io::Result<()> {
     println!("{:?}", LetterFrequency::measure(&cts));
     println!("{:?}", LetterRepeats::measure(&cts));
     println!("{:?}", IndexBounds::measure(&cts));
+    println!("{:?}", IoC::measure(&cts));
+    println!("{:?}", IsomorphsCounts::measure(&cts));
     Ok(())
 }
