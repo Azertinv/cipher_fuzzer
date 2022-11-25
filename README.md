@@ -39,9 +39,7 @@ The autokeyer can also be replaced with a key generator based on the index.
 
 ## Measurements
 - Letter distribution
-- Letter repeats
 - Index bounds
-- Index of coincidence
 - Isomorphs counts
 - Periodic IoC
 
