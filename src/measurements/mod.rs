@@ -11,6 +11,8 @@ pub mod index_of_coincidence;
 pub use index_of_coincidence::IoC;
 pub mod isomorphs_counts;
 pub use isomorphs_counts::IsomorphsCounts;
+pub mod periodic_ioc;
+pub use periodic_ioc::PeriodicIoC;
 
 pub fn measure(cts: &Cts) -> Vec<f64>{
     let measure_fns = [
@@ -19,6 +21,7 @@ pub fn measure(cts: &Cts) -> Vec<f64>{
         IndexBounds::measure,
         IoC::measure,
         IsomorphsCounts::measure,
+        PeriodicIoC::measure,
     ];
     measure_fns.iter()
         .map(|measure_fn| measure_fn(cts))
@@ -39,16 +42,28 @@ pub fn get_isomorphs(ct: &[u8], max_size: usize) -> Vec<Vec<usize>> {
     isomorphs
 }
 
-pub fn get_letter_count_and_sum(cts: &Cts) -> (Vec<i64>, usize) {
+pub fn get_letter_count(cts: &Cts) -> Vec<i64> {
+    get_periodic_letter_count(cts, 1)
+}
+
+pub fn get_periodic_letter_count(cts: &Cts, period: usize) -> Vec<i64> {
     let mut count = [0i64; CT_ALPHABET_USIZE];
-    let mut sum = 0;
     for ct in cts.iter() {
-        sum += ct.len();
-        for l in ct.iter() {
+        for l in ct.iter().step_by(period) {
             count[*l as usize] += 1;
         }
     }
-    (count.to_vec(), sum)
+    count.to_vec()
+}
+
+pub fn get_ioc(count: Vec<i64>) -> f64 {
+    let sum: i64 = count.iter().sum();
+    CT_ALPHABET.iter()
+        .map(|l| {
+            let c: f64 = (count[*l as usize] * (count[*l as usize] - 1)) as f64;
+            let n: f64 = (sum * (sum - 1)) as f64;
+            c / n
+        }).sum::<f64>() * (CT_ALPHABET_SIZE as f64)
 }
 
 pub trait Measure : std::fmt::Debug {

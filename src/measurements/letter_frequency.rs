@@ -2,23 +2,23 @@ use crate::common::*;
 use crate::measurements::{
     Measure,
     Summary,
-    get_letter_count_and_sum,
+    get_letter_count,
 };
 
 #[derive(Debug)]
 pub struct LetterFrequency {
-    freq: [f64; CT_ALPHABET_USIZE],
     summary: Summary<f64>,
 }
 
 impl Measure for LetterFrequency {
     fn measure(cts: &Cts) -> Box<dyn Measure>  {
-        let (count, sum) = get_letter_count_and_sum(cts);
+        let count = get_letter_count(cts);
+        let sum: i64 = count.iter().sum();
         let freq: [f64; CT_ALPHABET_USIZE] = count.iter().map(|x| {
             *x as f64 / sum as f64
         }).collect::<Vec<f64>>().try_into().unwrap();
         let summary = Summary::generate(&freq);
-        Box::new(LetterFrequency { freq, summary })
+        Box::new(LetterFrequency { summary })
     }
 
     fn extract(&self) -> Vec<f64> {
@@ -49,14 +49,7 @@ mod test {
         ];
         let result = LetterFrequency::measure(&data);
         let result: &LetterFrequency = result.as_any().downcast_ref().unwrap();
-        println!("{:?}", result.freq);
         println!("{:?}", result.summary);
-        assert_eq!(result.freq[1], 2.0 / 9.0);
-        assert_eq!(result.freq[2], 2.0 / 9.0);
-        assert_eq!(result.freq[3], 2.0 / 9.0);
-        assert_eq!(result.freq[4], 1.0 / 9.0);
-        assert_eq!(result.freq[5], 1.0 / 9.0);
-        assert_eq!(result.freq[6], 1.0 / 9.0);
         assert_eq!(result.summary.minimum, 0.0);
         assert_eq!(result.summary.maximum, 2.0/9.0);
     }

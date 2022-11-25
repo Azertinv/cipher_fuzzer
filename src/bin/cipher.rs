@@ -1,6 +1,6 @@
 use cipher_fuzzer::{
     common::*,
-    samples::get_texts,
+    samples::{get_texts, plaintexts_vec},
     ciphers::{
         CipherStack,
     },
@@ -15,6 +15,10 @@ struct Args {
     /// Number of cipher step used by the cipher
     #[arg(short, long)]
     cipher_filename: Option<String>,
+
+    /// Use plaintext from stdin
+    #[arg(short, default_value_t = false)]
+    stdin: bool,
 }
 
 fn main() -> io::Result<()> {
@@ -22,6 +26,10 @@ fn main() -> io::Result<()> {
     let cipher_stack = CipherStack::load(
         &args.cipher_filename
         .unwrap_or("/tmp/best_cipher.cs".to_string()))?;
-    print_texts(&cipher_stack.encrypt(get_texts()?));
+    if args.stdin {
+        print_texts(&cipher_stack.encrypt(get_texts()?));
+    } else {
+        print_texts(&cipher_stack.encrypt(plaintexts_vec()));
+    }
     Ok(())
 }

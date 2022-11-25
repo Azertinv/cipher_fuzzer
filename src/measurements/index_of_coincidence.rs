@@ -1,7 +1,8 @@
 use crate::common::*;
 use crate::measurements::{
     Measure,
-    get_letter_count_and_sum,
+    get_letter_count,
+    get_ioc,
 };
 
 #[derive(Debug)]
@@ -11,13 +12,7 @@ pub struct IoC {
 
 impl Measure for IoC {
     fn measure(cts: &Cts) -> Box<dyn Measure>  {
-        let (count, sum) = get_letter_count_and_sum(cts);
-        let value: f64 = CT_ALPHABET.iter()
-            .map(|l| {
-                let c: f64 = (count[*l as usize] * (count[*l as usize] - 1)) as f64;
-                let n: f64 = (sum * (sum - 1)) as f64;
-                c / n
-            }).sum();
+        let value = get_ioc(get_letter_count(cts));
         Box::new(IoC { value })
     }
 
@@ -45,7 +40,7 @@ mod test {
         let result = IoC::measure(&data);
         let result: &IoC = result.as_any().downcast_ref().unwrap();
         println!("{result:?}");
-        assert!((result.value - 0.027777777777777).abs() < 0.0000000000001);
+        assert!((result.value - 0.027777777777777 * 83.0).abs() < 0.0000000000001);
         assert_eq!(result.value, result.extract()[0]);
     }
 }
