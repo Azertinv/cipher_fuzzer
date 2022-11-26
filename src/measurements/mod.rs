@@ -27,12 +27,12 @@ pub fn measure(cts: &Cts) -> Vec<f64>{
     ];
     streams_fns.iter()
         .map(|stream_fn| stream_fn(cts))
-        .map(|stream| {
+        .flat_map(|stream| {
             measure_fns.iter()
                 .map(|measure_fn| measure_fn(&stream))
                 .flat_map(|measure| measure.extract())
                 .collect::<Vec<f64>>()
-        }).flatten().collect()
+        }).collect()
 }
 
 pub fn get_isomorphs(ct: &[u8], max_size: usize) -> Vec<Vec<usize>> {

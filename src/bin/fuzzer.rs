@@ -37,9 +37,6 @@ struct Fuzzer {
     /// Parameters given through cli
     args: Args,
 
-    /// CipherStacks that were scheduly mutated
-    corpus: Vec<Testcase>,
-
     /// CipherStacks found below the threshold, to be scheduly mutated
     queue: VecDeque<Testcase>,
 
@@ -61,7 +58,6 @@ impl Fuzzer {
         let distributions = Distributions::random();
         Fuzzer {
             args,
-            corpus: Vec::new(),
             queue: VecDeque::new(),
             messages_sigmas: distributions.sigmas(&measure(&messages_vec())),
             distributions,
@@ -115,7 +111,7 @@ impl Fuzzer {
                     }
                 }
                 // If we are in a local minimum
-                if !improved && scores.len() != 0 {
+                if !improved && !scores.is_empty() {
                     let score = stat::median(&scores);
                     if score < best_score {
                         best_score = score;

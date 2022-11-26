@@ -1,5 +1,4 @@
 use cipher_fuzzer::{
-    common::*,
     measurements::*,
     distribution::Distributions,
     samples::{get_texts, plaintexts_vec, messages_vec},
@@ -9,7 +8,6 @@ use cipher_fuzzer::{
 };
 use clap::Parser;
 use std::io;
-use statistical as stat;
 
 /// CLI for ciphers
 #[derive(Parser, Debug)]
@@ -44,7 +42,7 @@ fn main() -> io::Result<()> {
         let msg_p = distributions.sigmas(&measure(&messages_vec()));
         scores.push(msg_p.distance(&cts_p));
     }
-    let cts = cipher_stack.encrypt(pts.clone());
+    let cts = cipher_stack.encrypt(pts);
     let cts_p = distributions.sigmas(&measure(&cts));
     let msg_p = distributions.sigmas(&measure(&messages_vec()));
     let score = msg_p.distance(&cts_p);
