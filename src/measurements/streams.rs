@@ -19,7 +19,7 @@ mod test {
             vec![0,13,1,0,13,1,0,13,1],
         ];
         let result = super::delta_stream(&data);
-        assert_eq!(result[0], vec![0, 0, 13, 0, 0, 14, 0, 0]);
-        assert_eq!(result[1], vec![13, 14, 25, 13, 14, 25, 13, 14]);
+        assert_eq!(result[0], vec![0, 0, 13, 0, 0, CT_ALPHABET_SIZE-12, 0, 0]);
+        assert_eq!(result[1], vec![13, CT_ALPHABET_SIZE-12, CT_ALPHABET_SIZE-1, 13, CT_ALPHABET_SIZE-12, CT_ALPHABET_SIZE-1, 13, CT_ALPHABET_SIZE-12]);
     }
 }
