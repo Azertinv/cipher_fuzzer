@@ -14,7 +14,7 @@ use std::io;
 struct Args {
     /// Number of cipher step used by the cipher
     #[arg(short, long)]
-    cipher_filename: Option<String>,
+    cipher_filename: String,
 
     /// Use plaintext from stdin
     #[arg(short, default_value_t = false)]
@@ -23,9 +23,7 @@ struct Args {
 
 fn main() -> io::Result<()> {
     let args = Args::parse();
-    let cipher_stack = CipherStack::load(
-        &args.cipher_filename
-        .unwrap_or("/tmp/best_cipher.cs".to_string()))?;
+    let cipher_stack = CipherStack::load(&args.cipher_filename)?;
     if args.stdin {
         print_texts(&cipher_stack.encrypt(get_texts()?));
     } else {

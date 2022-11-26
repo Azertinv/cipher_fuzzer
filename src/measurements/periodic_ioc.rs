@@ -1,26 +1,31 @@
 use crate::common::*;
 use crate::measurements::{
     Measure,
+    Summary,
     get_periodic_letter_count,
     get_ioc,
 };
 
-const MAX_PERIOD: usize = 50;
+const MAX_PERIOD: usize = 30;
 
 #[derive(Debug)]
 pub struct PeriodicIoC {
     values: Vec<f64>,
+    summary: Summary<f64>,
 }
 
 impl Measure for PeriodicIoC {
     fn measure(cts: &Cts) -> Box<dyn Measure>  {
         let values: Vec<f64> = (1..MAX_PERIOD)
             .map(|period| get_ioc(get_periodic_letter_count(cts, period))).collect();
-        Box::new(PeriodicIoC { values })
+        let summary = Summary::generate(&values);
+        Box::new(PeriodicIoC { values, summary })
     }
 
     fn extract(&self) -> Vec<f64> {
-       self.values.clone()
+       let mut result = self.values.clone();
+       result.append(&mut self.summary.to_vec());
+       result
     }
 
     fn as_any(&self) -> &dyn std::any::Any {

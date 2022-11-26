@@ -1,5 +1,6 @@
 use statistical as stat;
 use crate::common::*;
+use std::fmt::Debug;
 
 pub mod letter_frequency;
 pub use letter_frequency::LetterFrequency;
@@ -10,6 +11,9 @@ pub use isomorphs_counts::IsomorphsCounts;
 pub mod periodic_ioc;
 pub use periodic_ioc::PeriodicIoC;
 
+pub mod streams;
+pub use streams::delta_stream;
+
 pub fn measure(cts: &Cts) -> Vec<f64>{
     let measure_fns = [
         LetterFrequency::measure,
@@ -17,10 +21,18 @@ pub fn measure(cts: &Cts) -> Vec<f64>{
         IsomorphsCounts::measure,
         PeriodicIoC::measure,
     ];
-    measure_fns.iter()
-        .map(|measure_fn| measure_fn(cts))
-        .flat_map(|measure| measure.extract())
-        .collect()
+    let streams_fns = [
+        |x: &Cts| x.clone(),
+        delta_stream,
+    ];
+    streams_fns.iter()
+        .map(|stream_fn| stream_fn(cts))
+        .map(|stream| {
+            measure_fns.iter()
+                .map(|measure_fn| measure_fn(&stream))
+                .flat_map(|measure| measure.extract())
+                .collect::<Vec<f64>>()
+        }).flatten().collect()
 }
 
 pub fn get_isomorphs(ct: &[u8], max_size: usize) -> Vec<Vec<usize>> {
@@ -56,11 +68,11 @@ pub fn get_ioc(count: Vec<i64>) -> f64 {
         .map(|l| {
             let c: f64 = (count[*l as usize] * (count[*l as usize] - 1)) as f64;
             let n: f64 = (sum * (sum - 1)) as f64;
-            c / n
+            if n != 0.0 { c / n } else { 0.0 }
         }).sum::<f64>() * (CT_ALPHABET_SIZE as f64)
 }
 
-pub trait Measure : std::fmt::Debug {
+pub trait Measure : Debug {
     fn measure(cts: &Cts) -> Box<dyn Measure> where Self: Sized;
 
     fn extract(&self) -> Vec<f64>;
@@ -78,12 +90,20 @@ pub struct Summary<T> {
 }
 
 impl<T> Summary<T> {
-    fn generate(data: &[T]) -> Self
+    pub fn generate(data: &[T]) -> Self
     where
-        T: PartialOrd + Copy,
+        T: PartialOrd + Copy + Default,
         f64: From<T>,
     {
         let float_data: Vec<f64> = data.iter().map(|x| f64::from(*x)).collect();
+        if float_data.is_empty() {
+            return Summary {
+                mean: 0.0,
+                median: 0.0,
+                minimum: T::default(),
+                maximum: T::default(),
+                stdev: 0.0}
+        }
         let mean = stat::mean(&float_data);
         let median = stat::median(&float_data);
         let minimum = *data.iter().min_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();

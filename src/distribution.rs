@@ -12,17 +12,18 @@ use std::io;
 use serde::{Serialize, Deserialize};
 use serde_json;
 
-pub struct PValues {
+#[derive(Debug)]
+pub struct Sigmas {
     pub values: Vec<f64>,
 }
 
-impl PValues {
-    pub fn distance(&self, rhs: &PValues) -> f64 {
-        let mut distance = 0.0;
+impl Sigmas {
+    pub fn distance(&self, rhs: &Sigmas) -> f64 {
+        let mut total_distance = 0.0;
         for (lhs, rhs) in zip(&self.values, &rhs.values) {
-            distance += (lhs - rhs).abs().powi(2);
+            total_distance += (lhs - rhs).abs().exp2();
         }
-        distance
+        total_distance
     }
 }
 
@@ -88,11 +89,15 @@ impl Distributions {
         zip(&self.means, &self.stdevs)
     }
 
-    pub fn p_values(&self, measures: &[f64]) -> PValues {
+    pub fn sigmas(&self, measures: &[f64]) -> Sigmas {
         let mut values = Vec::with_capacity(measures.len());
         for (measure, (mean, stdev)) in zip(measures, self.iter()) {
-            values.push(measure/stdev - mean/stdev);
+            if *stdev == 0.0 {
+                values.push(0.0);
+            } else {
+                values.push(measure/stdev - mean/stdev);
+            }
         }
-        PValues { values }
+        Sigmas { values }
     }
 }
