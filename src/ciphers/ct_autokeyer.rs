@@ -69,12 +69,20 @@ mod test {
 
     #[test]
     fn encrypt() {
-        let mut data = "1337 BOI".as_bytes().to_vec();
+        let mut data = vec![5, 18, 13, 8, 1, 8, 8, 8];
         let autokeyer = CtAutoKeyer {
             iv: 0,
             cipher_factory: InnerCipherFactory::ShiftFactory,
         };
         autokeyer.encrypt(&mut data);
-        assert_eq!(data, vec![49, 17, 68, 40, 72, 55, 51, 41]);
+        let n0: u8 = 5; // iv is 0 so no shift
+        let n1 = (n0+18).rem_euclid(CT_ALPHABET_SIZE);
+        let n2 = (n1+13).rem_euclid(CT_ALPHABET_SIZE);
+        let n3 = (n2+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n4 = (n3+1).rem_euclid(CT_ALPHABET_SIZE);
+        let n5 = (n4+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n6 = (n5+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n7 = (n6+8).rem_euclid(CT_ALPHABET_SIZE);
+        assert_eq!(data, vec![n0, n1, n2, n3, n4, n5, n6, n7]);
     }
 }

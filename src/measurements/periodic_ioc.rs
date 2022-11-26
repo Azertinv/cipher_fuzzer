@@ -60,7 +60,7 @@ mod test {
         let result: &PeriodicIoC = result.as_any().downcast_ref().unwrap();
         println!("{result:?}");
         let peak = *result.values.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
-        assert_eq!(83.0, peak);
+        assert_eq!(CT_ALPHABET_SIZE as f64, peak);
         assert_eq!(result.values[6], peak);
         assert_eq!(result.values[6+7], peak);
         assert_eq!(result.values[7+7], 0.0);

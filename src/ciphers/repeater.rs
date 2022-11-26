@@ -80,13 +80,22 @@ mod test {
 
     #[test]
     fn encrypt() {
-        let mut data = "1337 BOI".as_bytes().to_vec();
+        let mut data = vec![5, 18, 13, 8, CT_ALPHABET_SIZE - 1, 8, 8, 8];
         let repeater = Repeater {
-            key: "AAABBB".as_bytes().to_vec(),
+            key: vec![14, 14, 14, 7, 7, CT_ALPHABET_SIZE - 1],
             cipher_factory: InnerCipherFactory::ShiftFactory,
         };
         repeater.encrypt(&mut data);
         println!("{data:?}");
-        assert_eq!(data, vec![31, 33, 33, 38, 15, 49, 61, 55]);
+        assert_eq!(data, vec![
+            (5 + 14u8).rem_euclid(CT_ALPHABET_SIZE),
+            (18 + 14u8).rem_euclid(CT_ALPHABET_SIZE),
+            (13 + 14u8).rem_euclid(CT_ALPHABET_SIZE),
+            (8 + 7u8).rem_euclid(CT_ALPHABET_SIZE),
+            (CT_ALPHABET_SIZE - 1 + 7u8).rem_euclid(CT_ALPHABET_SIZE),
+            (8 + CT_ALPHABET_SIZE - 1u8).rem_euclid(CT_ALPHABET_SIZE),
+            (8 + 14u8).rem_euclid(CT_ALPHABET_SIZE),
+            (8 + 14u8).rem_euclid(CT_ALPHABET_SIZE),
+        ]);
     }
 }

@@ -55,16 +55,21 @@ mod test {
     fn mutate() {
         let mut shift = Shift { key: 42 };
         shift.mutate(Some(0));
-        assert_eq!(shift.key, 43);
+        assert_eq!(shift.key, 43u8.rem_euclid(CT_ALPHABET_SIZE));
         shift.mutate(Some(1));
-        assert_eq!(shift.key, 42);
+        assert_eq!(shift.key, 42u8.rem_euclid(CT_ALPHABET_SIZE));
     }
 
     #[test]
     fn encrypt() {
-        let shift = Shift { key: 42 };
-        let mut data = vec![1, 2, 3, 80];
+        let shift = Shift { key: 20 };
+        let mut data = vec![1, 2, 3, CT_ALPHABET_SIZE - 1];
         shift.encrypt(&mut data);
-        assert_eq!(data, vec![43, 44, 45, 39]);
+        assert_eq!(data, vec![
+            (20 + 1u8).rem_euclid(CT_ALPHABET_SIZE),
+            (20 + 2u8).rem_euclid(CT_ALPHABET_SIZE),
+            (20 + 3u8).rem_euclid(CT_ALPHABET_SIZE),
+            (20 + CT_ALPHABET_SIZE - 1u8).rem_euclid(CT_ALPHABET_SIZE),
+        ]);
     }
 }

@@ -49,12 +49,12 @@ mod test {
     #[test]
     fn measurement() {
         let data: Cts = vec![
-            "AAA   BBB".as_bytes().to_vec(),
-            "A BA BA B".as_bytes().to_vec(),
+            vec![0, 0, 0, 7, 7, 7, 1, 1, 1],
+            vec![0, 7, 1, 0, 7, 1, 0, 7, 1],
         ];
         let result = IndexBounds::measure(&data);
         let result: &IndexBounds = result.as_any().downcast_ref().unwrap();
-        assert_eq!(result.summary.minimum, 49);
-        assert_eq!(result.summary.maximum, 82);
+        assert_eq!(result.summary.minimum, CT_ALPHABET_SIZE - 7);
+        assert_eq!(result.summary.maximum, CT_ALPHABET_SIZE - 1);
     }
 }
