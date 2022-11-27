@@ -1,20 +1,20 @@
 use array_const_fn_init::array_const_fn_init;
 
-pub const CT_ALPHABET_SIZE: u8 = 83;
+pub const CT_ALPHABET_SIZE: u8 = 26;
 pub const CT_ALPHABET_USIZE: usize = CT_ALPHABET_SIZE as usize;
 
 const fn usize_to_u8(i: usize) -> u8 {
     i as u8
 }
 
-pub const CT_ALPHABET: [u8; CT_ALPHABET_USIZE] = array_const_fn_init!(usize_to_u8; 83);
+pub const CT_ALPHABET: [u8; CT_ALPHABET_USIZE] = array_const_fn_init!(usize_to_u8; 26);
 
-pub const READABLE_OFFSET: u8 = 32;
+pub const READABLE_OFFSET: u8 = 0x41;
 
-pub const CT_PER_CTS: usize = 9;
+pub const CT_PER_CTS: usize = 1;
 
-pub const MAX_CT_USIZE: usize = 138;
-pub const MIN_CT_USIZE: usize = 99;
+pub const MAX_CT_USIZE: usize = 454;
+pub const MIN_CT_USIZE: usize = 454;
 
 pub type Ct = Vec<u8>;
 pub type Cts = Vec<Ct>;
