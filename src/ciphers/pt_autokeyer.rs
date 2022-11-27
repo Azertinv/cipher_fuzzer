@@ -12,20 +12,20 @@ use rand::{
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct CtAutoKeyer {
+pub struct PtAutoKeyer {
     iv: u8,
     cipher_factory: InnerCipherFactory,
     reverse: bool,
 }
 
 #[typetag::serde]
-impl Cipher for CtAutoKeyer {
+impl Cipher for PtAutoKeyer {
     fn generate() -> Self where Self: Sized {
         let mut rng = thread_rng();
         let iv = *CT_ALPHABET.choose(&mut rng).unwrap();
         let cipher_factory = InnerCipherFactory::random_factory();
         let reverse = rng.gen_bool(0.5);
-        CtAutoKeyer { iv, cipher_factory, reverse}
+        PtAutoKeyer { iv, cipher_factory, reverse}
     }
 
     fn mutation_count(&self) -> u32 {
@@ -54,15 +54,15 @@ impl Cipher for CtAutoKeyer {
             .collect();
         let data_len = data.len();
         if !self.reverse {
-            ciphers[self.iv as usize].encrypt(&mut data[0..1]);
-            for i in 1..data_len {
+            for i in (1..data_len).rev() {
                 ciphers[data[i - 1] as usize].encrypt(&mut data[i..i+1]);
             }
+            ciphers[self.iv as usize].encrypt(&mut data[0..1]);
         } else {
-            ciphers[self.iv as usize].encrypt(&mut data[data_len-1..data_len]);
-            for i in (0..data_len-1).rev() {
+            for i in 0..data_len-1 {
                 ciphers[data[i + 1] as usize].encrypt(&mut data[i..i+1]);
             }
+            ciphers[self.iv as usize].encrypt(&mut data[data_len-1..data_len]);
         }
     }
 }
@@ -73,7 +73,7 @@ mod test {
 
     #[test]
     fn mutate() {
-        let mut autokeyer = CtAutoKeyer {
+        let mut autokeyer = PtAutoKeyer {
             iv: 0,
             cipher_factory: InnerCipherFactory::ShiftFactory,
             reverse: false,
@@ -87,40 +87,40 @@ mod test {
     #[test]
     fn encrypt() {
         let mut data = vec![5, 18, 13, 8, 1, 8, 8, 8];
-        let autokeyer = CtAutoKeyer {
+        let autokeyer = PtAutoKeyer {
             iv: 5,
             cipher_factory: InnerCipherFactory::ShiftFactory,
             reverse: false,
         };
         autokeyer.encrypt(&mut data);
-        let n0: u8 = (5+5u8).rem_euclid(CT_ALPHABET_SIZE);
-        let n1 = (n0+18).rem_euclid(CT_ALPHABET_SIZE);
-        let n2 = (n1+13).rem_euclid(CT_ALPHABET_SIZE);
-        let n3 = (n2+8).rem_euclid(CT_ALPHABET_SIZE);
-        let n4 = (n3+1).rem_euclid(CT_ALPHABET_SIZE);
-        let n5 = (n4+8).rem_euclid(CT_ALPHABET_SIZE);
-        let n6 = (n5+8).rem_euclid(CT_ALPHABET_SIZE);
-        let n7 = (n6+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n0: u8 = (5u8+5).rem_euclid(CT_ALPHABET_SIZE);
+        let n1 = (5u8+18).rem_euclid(CT_ALPHABET_SIZE);
+        let n2 = (18u8+13).rem_euclid(CT_ALPHABET_SIZE);
+        let n3 = (13u8+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n4 = (8u8+1).rem_euclid(CT_ALPHABET_SIZE);
+        let n5 = (1u8+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n6 = (8u8+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n7 = (8u8+8).rem_euclid(CT_ALPHABET_SIZE);
         assert_eq!(data, vec![n0, n1, n2, n3, n4, n5, n6, n7]);
     }
 
     #[test]
     fn reverse() {
         let mut data = vec![5, 18, 13, 8, 1, 8, 8, 8];
-        let autokeyer = CtAutoKeyer {
+        let autokeyer = PtAutoKeyer {
             iv: 13,
             cipher_factory: InnerCipherFactory::ShiftFactory,
             reverse: true,
         };
         autokeyer.encrypt(&mut data);
-        let n7: u8 = (8+13u8).rem_euclid(CT_ALPHABET_SIZE);
-        let n6 = (n7+8).rem_euclid(CT_ALPHABET_SIZE);
-        let n5 = (n6+8).rem_euclid(CT_ALPHABET_SIZE);
-        let n4 = (n5+1).rem_euclid(CT_ALPHABET_SIZE);
-        let n3 = (n4+8).rem_euclid(CT_ALPHABET_SIZE);
-        let n2 = (n3+13).rem_euclid(CT_ALPHABET_SIZE);
-        let n1 = (n2+18).rem_euclid(CT_ALPHABET_SIZE);
-        let n0 = (n1+5).rem_euclid(CT_ALPHABET_SIZE);
+        let n7: u8 = (13u8+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n6 = (8u8+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n5 = (8u8+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n4 = (8u8+1).rem_euclid(CT_ALPHABET_SIZE);
+        let n3 = (1u8+8).rem_euclid(CT_ALPHABET_SIZE);
+        let n2 = (8u8+13).rem_euclid(CT_ALPHABET_SIZE);
+        let n1 = (13u8+18).rem_euclid(CT_ALPHABET_SIZE);
+        let n0 = (18u8+5).rem_euclid(CT_ALPHABET_SIZE);
         assert_eq!(data, vec![n0, n1, n2, n3, n4, n5, n6, n7]);
     }
 }
