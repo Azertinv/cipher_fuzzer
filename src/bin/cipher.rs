@@ -1,6 +1,10 @@
 use cipher_fuzzer::{
     common::*,
-    samples::{get_texts, plaintexts_vec},
+    samples::{
+        get_texts,
+        plaintexts_vec,
+        messages_vec,
+    },
     ciphers::{
         CipherStack,
     },
@@ -16,6 +20,10 @@ struct Args {
     #[arg(short, long)]
     cipher_filename: String,
 
+    /// Use the messages instead of a plaintext
+    #[arg(short, default_value_t = false)]
+    reverse: bool,
+
     /// Use plaintext from stdin
     #[arg(short, default_value_t = false)]
     stdin: bool,
@@ -26,6 +34,8 @@ fn main() -> io::Result<()> {
     let cipher_stack = CipherStack::load(&args.cipher_filename)?;
     if args.stdin {
         print_texts(&cipher_stack.encrypt(get_texts()?));
+    } else if args.reverse {
+        print_texts(&cipher_stack.encrypt(messages_vec()));
     } else {
         print_texts(&cipher_stack.encrypt(plaintexts_vec()));
     }
